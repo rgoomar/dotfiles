@@ -165,7 +165,7 @@ client.urgent #aa0000 #990000 #ffffff
 
 # Custom Shortcuts
 # Screenshot utility
-bindsym Print exec "scrot -se 'mv $f ~/Pictures'"
+bindsym --release Print exec scrot -s $HOME/Pictures/`date +%Y-%m-%d_%H:%M:%S`.png
 
 # Assignments
 assign [class="Spotify"] 6
