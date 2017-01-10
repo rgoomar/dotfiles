@@ -66,7 +66,7 @@ bindsym $mod+Shift+space floating toggle
 # bindsym $mod+space focus mode_toggle
 
 # Lock screen
-bindsym $mod+Mod1+l exec --no-startup-id i3lock -e
+bindsym $mod+Mod1+l exec --no-startup-id i3lock -e -c 222222
 
 # switch to workspace
 bindsym $mod+1 workspace 1
