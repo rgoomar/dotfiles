@@ -110,6 +110,11 @@ bindsym XF86AudioMute exec volti-remote -m
 bindym XF86MonBrightnessUp exec xbacklight -inc 10
 bindym XF86MonBrightnessDown exec xbacklight -dec 10
 
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
 # reload the configuration nile
 bindsym $mod+Shift+q reload
 
