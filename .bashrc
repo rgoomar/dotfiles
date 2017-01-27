@@ -243,4 +243,14 @@ else
   sq_color=$BBlue
 fi
 
+# Set VIM mode
+set -o vi
+
+# EC2 finder alias
+ec2_finder() {
+    aws ec2 describe-instances --filters "Name=tag:Name,Values=$1"
+}
+
+alias findec2=ec2_finder
+
 export PS1="\n$sq_color\342\224\214\342\224\200\$([[ \$? != 0 ]] && echo \"[$BRed\342\234\227$sq_color]\342\224\200\")[$Cyan\@$sq_color]\342\224\200[\[\033[01;37m\]\u@\h$sq_color]\342\224\200[$BGreen\w$sq_color]\n$sq_color\342\224\224\342\224\200\342\224\200> $Yellow\$(parse_git_branch)$Green\$ "
