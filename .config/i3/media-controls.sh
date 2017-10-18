@@ -5,7 +5,7 @@ COMMAND=$1
 # Execute pianobar commands
 PIANOBAR_PID=`pidof pianobar`
 if [[ $PIANOBAR_PID -gt 0 ]]; then
-    PIANOBAR_CTL_LOCATION=/home/rgoomar/.config/pianobar/ctl
+    PIANOBAR_CTL_LOCATION=$HOME/.config/pianobar/ctl
     case $COMMAND in
         play-pause)
             echo -n 'p' > $PIANOBAR_CTL_LOCATION

@@ -127,9 +127,9 @@ function parse_git_branch {
 # Setup sync between two folders
 alias rsync='rsync -a --delete'
 
-# Pacman stuff
-alias update='sudo pacman -Syu'
-alias install='sudo pacman -S'
+# Package manager stuff 
+alias update='sudo apt update && sudo apt upgrade'
+alias install='sudo apt install'
 
 # System commands
 alias shutdown='sudo shutdown -h now'
@@ -243,6 +243,9 @@ else
   sq_color=$BBlue
 fi
 
+# Make sure vim is the editor
+export VISUAL=vim
+export EDITOR="$VISUAL"
 # Set VIM mode
 set -o vi
 
