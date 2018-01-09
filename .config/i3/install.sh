@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Utilities that this i3 config uses
-sudo apt-get install -y i3 volti blueman scrot xbacklight
+sudo apt-get install -y i3 pasystray pavucontrol blueman scrot xbacklight
 
 # Make Dunst optional
 # sudo apt-get install -y dunst
