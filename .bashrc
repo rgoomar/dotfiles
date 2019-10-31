@@ -257,3 +257,8 @@ ec2_finder() {
 alias findec2=ec2_finder
 
 export PS1="\n$sq_color\342\224\214\342\224\200\$([[ \$? != 0 ]] && echo \"[$BRed\342\234\227$sq_color]\342\224\200\")[$Cyan\@$sq_color]\342\224\200[\[\033[01;37m\]\u@\h$sq_color]\342\224\200[$BGreen\w$sq_color]\n$sq_color\342\224\224\342\224\200\342\224\200> $Yellow\$(parse_git_branch)$Green\$ "
+
+# Add pyenv
+export PATH="/home/rgoomar/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
