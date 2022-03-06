@@ -1,59 +1,34 @@
 -- This is where you custom modules and plugins goes.
 -- See the wiki for a guide on how to extend NvChad
 
-local hooks = require "core.hooks"
+function goimports(timeout_ms)
+  local context = { only = { "source.organizeImports" } }
+  vim.validate { context = { context, "t", true } }
 
--- NOTE: To use this, make a copy with `cp example_init.lua init.lua`
+  local params = vim.lsp.util.make_range_params()
+  params.context = context
 
---------------------------------------------------------------------
+  -- See the implementation of the textDocument/codeAction callback
+  -- (lua/vim/lsp/handler.lua) for how to do this properly.
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
+  if not result or next(result) == nil then return end
+  local actions = result[1].result
+  if not actions then return end
+  local action = actions[1]
 
--- To modify packaged plugin configs, use the overrides functionality
--- if the override does not exist in the plugin config, make or request a PR,
--- or you can override the whole plugin config with 'chadrc' -> M.plugins.default_plugin_config_replace{}
--- this will run your config instead of the NvChad config for the given plugin
+  -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
+  -- is a CodeAction, it can have either an edit, a command or both. Edits
+  -- should be executed first.
+  if action.edit or type(action.command) == "table" then
+    if action.edit then
+      vim.lsp.util.apply_workspace_edit(action.edit)
+    end
+    if type(action.command) == "table" then
+      vim.lsp.buf.execute_command(action.command)
+    end
+  else
+    vim.lsp.buf.execute_command(action)
+  end
+end
 
--- hooks.override("lsp", "publish_diagnostics", function(current)
-  --   current.virtual_text = false;
-  --   return current;
-  -- end)
-
-  -- To add new mappings, use the "setup_mappings" hook,
-  -- you can set one or many mappings
-  -- example below:
-
-  -- hooks.add("setup_mappings", function(map)
-    --    map("n", "<leader>cc", "gg0vG$d", opt) -- example to delete the buffer
-    --    .... many more mappings ....
-    -- end)
-
-    -- To add new plugins, use the "install_plugin" hook,
-    -- NOTE: we heavily suggest using Packer's lazy loading (with the 'event' field)
-    -- see: https://github.com/wbthomason/packer.nvim
-    -- examples below:
-
-    hooks.add("install_plugins", function(use)
-      use {
-        "williamboman/nvim-lsp-installer",
-        config = function()
-          local lsp_installer = require "nvim-lsp-installer"
-
-          lsp_installer.on_server_ready(function(server)
-            local opts = {}
-
-            server:setup(opts)
-            vim.cmd [[ do User LspAttachBuffers ]]
-          end)
-        end
-      }
-      use {
-        "hashivim/vim-terraform",
-        config = function()
-          vim.api.nvim_set_var('terraform_fmt_on_save', 1)
-        end
-      }
-    end)
-
-    -- alternatively, put this in a sub-folder like "lua/custom/plugins/mkdir"
-    -- then source it with
-
-    -- require "custom.plugins.mkdir"
+vim.cmd("autocmd BufWritePre *.go lua goimports(1000)")

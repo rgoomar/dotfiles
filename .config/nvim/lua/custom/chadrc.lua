@@ -2,7 +2,7 @@
 -- This file is for NvChad options & tools, custom settings are split between here and 'lua/custom/init.lua'
 
 local M = {}
-M.options, M.ui, M.mappings, M.plugins = {}, {}, {}, {}
+-- M.options, M.ui, M.mappings, M.plugins = {}, {}, {}, {}
 
 -- NOTE: To use this, make a copy with `cp example_chadrc.lua chadrc.lua`
 
@@ -19,8 +19,10 @@ M.options, M.ui, M.mappings, M.plugins = {}, {}, {}, {}
 --   theme = "nord"
 -- }
 
+local userPlugins = require "custom.plugins"
 -- NvChad included plugin options & overrides
 M.plugins = {
+   install = userPlugins,
    options = {
       lspconfig = {
         setup_lspconf = "custom.lspconfig"
@@ -32,7 +34,7 @@ M.plugins = {
    -- this string will be called in a `require`
    --              use "(custom.configs).my_func()" to call a function
    --              use "custom.blankline" to call a file
-   default_plugin_config_replace = {},
+   -- default_plugin_config_replace = {},
 }
 
 return M

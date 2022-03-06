@@ -1,27 +1,86 @@
+-- local M = {}
+--
+-- M.setup_lsp = function(attach, capabilities)
+--   local lspconfig = require "lspconfig"
+--
+--   -- lspservers with default config
+--
+--   local servers = {"html", "cssls", "terraformls", "bashls", "graphql", "jsonls", "tsserver", "vimls", "yamlls"}
+--
+--   for _, lsp in ipairs(servers) do
+--     lspconfig[lsp].setup {
+--       on_attach = attach,
+--       capabilities = capabilities,
+--       -- root_dir = vim.loop.cwd,
+--       flags = {
+--         debounce_text_changes = 150,
+--       },
+--     }
+--   end
+--   -- custom setups
+--
+--   lspconfig.dockerls.setup {
+--     filetypes = {"Dockerfile", "dockerfile", "Dockerfile.*"},
+--   }
+--
+--   lspconfig.gopls.setup {
+--     -- format on save
+--     on_attach = function(client)
+--        if client.resolved_capabilities.document_formatting then
+--           vim.cmd "autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()"
+--        end
+--     end,
+--     capabilities = capabilities,
+--     flags = {
+--       debounce_text_changes = 150,
+--     },
+--   }
+-- end
+--
+-- return M
 local M = {}
 
 M.setup_lsp = function(attach, capabilities)
-  local lspconfig = require "lspconfig"
+   local lsp_installer = require "nvim-lsp-installer"
 
-  -- lspservers with default config
-
-  local servers = {"html", "cssls", "terraformls", "bashls", "gopls", "graphql", "jsonls", "tsserver", "vimls", "yamlls"}
-
-  for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-      on_attach = attach,
-      capabilities = capabilities,
-      -- root_dir = vim.loop.cwd,
-      flags = {
-        debounce_text_changes = 150,
+   lsp_installer.settings {
+      ui = {
+         icons = {
+            server_installed = "✅" ,
+            server_pending = "⚠️",
+            server_uninstalled = "❌",
+         },
       },
-    }
-  end
-  -- custom setups
+   }
 
-  lspconfig.dockerls.setup {
-    filetypes = {"Dockerfile", "dockerfile", "Dockerfile.*"},
-  }
+   lsp_installer.on_server_ready(function(server)
+      local opts = {
+         on_attach = attach,
+         capabilities = capabilities,
+         flags = {
+            debounce_text_changes = 150,
+         },
+         settings = {},
+      }
+
+      -- -- basic example to edit lsp server's options, disabling tsserver's inbuilt formatter
+      -- if server.name == 'tsserver' then 
+      --   opts.on_attach = function(client, bufnr)
+      --      client.resolved_capabilities.document_formatting = false
+      --      vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>fm", "<cmd>lua vim.lsp.buf.formatting()<CR>", {})
+      --   end,
+      -- end
+      if server.name == 'gopls' then
+        opts.on_attach = function(client)
+           if client.resolved_capabilities.document_formatting then
+              vim.cmd "autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()"
+           end
+        end
+      end
+      
+      server:setup(opts)
+      vim.cmd [[ do User LspAttachBuffers ]]
+   end)
 end
 
 return M
