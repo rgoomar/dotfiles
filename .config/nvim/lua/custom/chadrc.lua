@@ -22,7 +22,7 @@ local M = {}
 local userPlugins = require "custom.plugins"
 -- NvChad included plugin options & overrides
 M.plugins = {
-   install = userPlugins,
+   user = userPlugins,
    options = {
       lspconfig = {
         setup_lspconf = "custom.lspconfig"
